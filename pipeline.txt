@@ -1,0 +1,23 @@
+ecg_reconstruction_project/
+│
+├── data/                    # Dữ liệu và các tệp liên quan đến dữ liệu
+│   ├── raw/                 # Dữ liệu gốc, chưa xử lý
+│   └── processed/           # Dữ liệu đã được tiền xử lý
+│
+├── notebooks/               # Các notebook Jupyter (dùng cho phân tích và thử nghiệm)
+│   └── ecg_data_exploration.ipynb
+│
+├── src/                     # Các tệp mã nguồn chính của dự án
+│   ├── __init__.py          # Tệp khởi tạo module
+│   ├── preprocess.py        # Mã nguồn tiền xử lý dữ liệu
+│   ├── model.py             # Xây dựng mô hình 1D CNN + Bi-LSTM
+│   ├── train.py             # Huấn luyện mô hình
+│   ├── evaluate.py          # Đánh giá mô hình
+│   └── utils.py             # Các hàm tiện ích khác
+│
+├── config/                  # Các tệp cấu hình cho dự án
+│   └── config.yaml          # Cấu hình cho các tham số mô hình, huấn luyện, v.v.
+│
+├── requirements.txt         # Danh sách các thư viện cần thiết
+├── README.md                # Tài liệu giới thiệu về dự án
+└── main.py                  # Tệp chính chạy toàn bộ pipeline
