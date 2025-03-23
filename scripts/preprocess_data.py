@@ -7,12 +7,12 @@ logging.basicConfig(level=logging.INFO) #  ghi log từ INFO trở lên
 logger = logging.getLogger(__name__)
 
 class ECGDataProcessor:
-    def __init__(self, data_path, look_back=300, train_split=0.7, val_split=0.15):
+    def __init__(self, data_path: str, look_back: int, train_split: int, val_split: int):
         """Initialize data processor with parameters"""
         self.data_path = data_path
         self.look_back = look_back
-        self.train_split = train_split  # 70% for training
-        self.val_split = val_split      # 15% for validation
+        self.train_split = train_split  
+        self.val_split = val_split      
         self.data = None
 
     def load_and_validate_data(self):
@@ -32,7 +32,7 @@ class ECGDataProcessor:
                 self.data = self.data.fillna(method='ffill')
             
             # Convert to numpy array
-            self.data = self.data["V2"].to_numpy().reshape(-1, 1)
+            self.data = self.data["V2"].to_numpy().reshape(-1, 1) # -> Reshape from (n,) to (n, 1)
             logger.info(f"Data loaded successfully. Shape: {self.data.shape}")
             return True
             
@@ -42,13 +42,15 @@ class ECGDataProcessor:
 
     def create_sequences(self, data):
         """Create sequences for time series data"""
+        # X is the input sequences, Y is the targets
         X, Y = [], []
         try:
             for i in range(len(data) - self.look_back):
                 X.append(data[i:(i + self.look_back), 0])
                 Y.append(data[i + self.look_back, 0])
-            X, Y = np.array(X), np.array(Y)
-            X = X.reshape((X.shape[0], X.shape[1], 1))
+                
+            X, Y = np.array(X), np.array(Y) # -> Convert to numpy arrays
+            X = X.reshape((X.shape[0], X.shape[1], 1)) # -> Reshape for LSTM 
             return X, Y
         except Exception as e:
             logger.error(f"Error creating sequences: {str(e)}")
@@ -91,14 +93,14 @@ class ECGDataProcessor:
         self.load_and_validate_data()
         return self.split_and_prepare_dataset()
 
-# Hàm chính để chạy và xuất dữ liệu (cho mục đích kiểm tra)
+
 if __name__ == "__main__":
     data_path = "./data/processed/custom_training_dataset.csv"
     look_back = 300
     train_split = 0.7
     val_split = 0.15
 
-    processor = ECGDataProcessor(data_path, look_back, train_split, val_split)
+    processor = ECGDataProcessor(data_path, look_back = look_back, train_split = train_split, val_split = val_split)
     X_train, y_train, X_val, y_val, X_test, y_test = processor.process_and_get_data()
     
     print(f"X_train shape: {X_train.shape}")

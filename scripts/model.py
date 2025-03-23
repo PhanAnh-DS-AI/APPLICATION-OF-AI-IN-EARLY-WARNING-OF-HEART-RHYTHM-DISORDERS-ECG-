@@ -40,3 +40,16 @@ def create_model(input_shape=(300, 1)):
 
     model.summary()
     return model
+
+# import pydot
+# import graphviz
+
+# print("pydot version:", pydot.__version__)
+# print("graphviz version:", graphviz.__version__)
+# from tensorflow.keras.utils import plot_model
+
+# # Khởi tạo mô hình
+# model = create_model()
+
+# # Xuất sơ đồ mô hình
+# plot_model(model, to_file="model_architecture.png", show_shapes=True, show_layer_names=True)

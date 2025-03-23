@@ -3,6 +3,7 @@ import os
 import time
 from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
 from model import create_model
+from New_model import create_optimized_model
 from preprocess_data import ECGDataProcessor  # Sửa tên file từ preprocess.py thành preprocess_data.py
 import tensorflow as tf
 import logging
@@ -32,8 +33,8 @@ class TimeHistory(tf.keras.callbacks.Callback):
         logger.info(f"Total training time: {self.total_time:.2f} seconds")
 
 def train_model():
-    # Parameters
-    data_path = "./data/processed/custom_training_dataset.csv"
+    # Parameters 
+    data_path = "./data/processed/data_102_filtered_100k.csv"
     look_back = 300
     train_split = 0.7
     val_split = 0.15
@@ -47,7 +48,7 @@ def train_model():
 
     # Create model
     logger.info("Creating model...")
-    model = create_model(input_shape=(look_back, 1))
+    model = create_optimized_model(input_shape=(look_back, 1))
 
     # Đảm bảo thư mục logs và weights tồn tại
     output_dir = "./logs/ECG_best_weight"
@@ -55,10 +56,19 @@ def train_model():
     log_dir = "./logs/tensorboard_logs"
     os.makedirs(log_dir, exist_ok=True)
 
+    # Tìm file weight gần nhất
+    weight_files = sorted([f for f in os.listdir(output_dir) if f.endswith(".h5")])
+    if weight_files:
+        latest_weight = os.path.join(output_dir, weight_files[-1])  # Chọn file gần nhất
+        model.load_weights(latest_weight)  # Load trọng số
+        logger.info(f"Loaded weights from {latest_weight}")
+    else:
+        logger.info("No previous weights found, training from scratch.")
+
     # Callback để lưu trọng số tốt nhất mỗi 10 epoch
     checkpoint_callback = SaveBestEveryNEpoch(
         filepath=os.path.join(output_dir, 'weights-best-epoch-{epoch:02d}.weights.h5'),
-        monitor='val_loss',
+        monitor='val_mae',
         save_weights_only=True,
         save_best_only=True,
         period=10
@@ -70,23 +80,36 @@ def train_model():
     # Callback đo thời gian
     time_callback = TimeHistory()
 
-    # Huấn luyện mô hình
-    logger.info("Starting model training...")
-    history = model.fit(
-        X_train, y_train,
-        validation_data=(X_val, y_val),  
-        batch_size=batch_size,
-        epochs=epochs,
-        verbose=1,
-        callbacks=[checkpoint_callback, tb_callback, time_callback]
-    )
+    initial_epoch = int(weight_files[-1].split("-epoch-")[1].split(".")[0]) if weight_files else 0
+    remaining_epochs = max(epochs - initial_epoch, 0)  # Đảm bảo không bị giá trị âm
 
+    if remaining_epochs > 0:
+        logger.info(f"Resuming training from epoch {initial_epoch + 1} to {epochs}")
+        history = model.fit(
+            X_train, y_train,
+            validation_data=(X_val, y_val),  
+            batch_size=batch_size,
+            epochs=epochs,  # Tổng số epochs cần train
+            initial_epoch=initial_epoch,  # Bắt đầu từ epoch đã train trước
+            verbose=1,
+            callbacks=[checkpoint_callback, tb_callback, time_callback]
+        )
+    else:
+        logger.info("Training already completed, no remaining epochs to train.")
+        
     # Đánh giá trên test set
     logger.info("Evaluating model on test set...")
     test_loss = model.evaluate(X_test, y_test, verbose=0)
-    logger.info(f"Test loss (MSE): {test_loss[0]}")
+    logger.info(f"Test MSE: {test_loss[0]:.4f}")
+    logger.info(f"Test MAE: {test_loss[1]:.4f}")
+    logger.info(f"Test RMSE: {test_loss[2]:.4f}")
+    logger.info(f"Test AUC: {test_loss[3]:.4f}")
+
 
     return model, history
 
 if __name__ == "__main__":
     model, history = train_model()
+    
+    
+    
