@@ -16,7 +16,7 @@ The model is evaluated on a test set (ECG-102) and an additional record (Record 
 
 ## Model Architecture
 The architecture of the 1D CNN-BiLSTM model is illustrated below:
-![Model Architecture](notebook_test/img/architecture.png)
+![Model Architecture](notebook_test/img/model_architecture.png)
 
 - **Input**: Raw ECG signal (1D array).
 - **CNN Blocks**: Residual convolutional layers to extract spatial features.
