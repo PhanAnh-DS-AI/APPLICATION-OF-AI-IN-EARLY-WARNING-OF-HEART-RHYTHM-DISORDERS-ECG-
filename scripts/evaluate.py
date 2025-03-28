@@ -79,17 +79,17 @@ def visualize_predictions(y_true, y_pred):
         plt.figure(figsize=(12, 6))  # Chỉnh kích thước hình
         
         # Lấy 300 điểm đầu tiên của tập dữ liệu để vẽ
-        plt.plot(y_true[1500:6000], label='Actual Signal', color='blue')
-        plt.plot(y_pred[1500:6000], label='Predicted Signal', color='red', linestyle='--')
+        plt.plot(y_true[1800:], label='Tín hiệu thực tế', color='blue')
+        plt.plot(y_pred[1800:], label='Tín hiệu dự đoán', color='red', linestyle='--')
 
         # Định dạng biểu đồ
-        plt.title('Actual vs Predicted ECG Signal (300 data points)')
-        plt.xlabel('Time Steps')
-        plt.ylabel('Amplitude')
+        plt.title('Tín hiệu ECG thực tế và dư đoán (Model Original Data)')
+        plt.xlabel('Chuỗi thời gian')
+        plt.ylabel('Biên độ')
         plt.legend()
         
         # Lưu và hiển thị hình ảnh
-        # plt.savefig('output_figure.png')
+        # plt.savefig('reconstructed_original.png')
         plt.show()
         
         logger.info("Predictions visualized and saved as output_figure.png")
@@ -101,8 +101,8 @@ def visualize_predictions(y_true, y_pred):
 def visualize_predictions_generated(y_true, y_pred, y_generated):
     """Visualize actual vs predicted vs generated ECG signals."""
     plt.figure(figsize=(12, 6))
-    plt.plot(y_true[:600], label='Actual Signal', color='blue')
-    plt.plot(y_pred[:600], label='Predicted Signal (Direct)', color='red', linestyle='--')
+    plt.plot(y_true[12500:], label='Actual Signal', color='blue')
+    plt.plot(y_pred[12500:], label='Predicted Signal (Direct)', color='red', linestyle='--')
     plt.plot(y_generated, label='Generated Signal (Step-by-Step)', color='green', linestyle='dotted')
     plt.title('ECG Signal Comparison')
     plt.xlabel('Time Steps')
@@ -113,12 +113,12 @@ def visualize_predictions_generated(y_true, y_pred, y_generated):
     logger.info("Predictions visualized successfully.")
 
 def main():
-    # Parameters data/processed/data_102_filtered_100k.csv | data\processed\data_214_30k_filtered.csv
+    # Parameters data/processed/data_102_filtered_100k.csv | data\processed\data_214_30k_filtered.csv | \custom_training_dataset.csv
     data_path = "./data/processed/data_214_30k_filtered.csv"
     look_back = 300
     train_split = 0.7
     val_split = 0.15
-    weights_path = "./logs/ECG_best_weight/weights-best-epoch-40.weights.h5"  # Đường dẫn đến weights tốt nhất
+    weights_path = "./logs_customdata/ECG_best_weight/weights-best-epoch-50.weights.h5"  # Đường dẫn đến weights tốt nhất | Weights customdata: ./logs_customdata/ECG_best_weight/weights-best-epoch-50.weights.h5 | "./logs/ECG_best_weight/weights-best-epoch-40.weights.h5"
 
     try:
         # Initialize data processor
@@ -133,10 +133,10 @@ def main():
         y_pred, mse, mae, rmse, r2 = evaluate_model(model, X_test, y_test)
 
         # Visualize predictions
-        # visualize_predictions(y_test, y_pred )
+        visualize_predictions(y_test, y_pred )
         
-        y_generated = generate_ecg_signal(model, X_test[:1], n_steps=600)
-        visualize_predictions_generated(y_test, y_pred, y_generated)
+        # y_generated = generate_ecg_signal(model, X_test[:1], n_steps=600)
+        # visualize_predictions_generated(y_test, y_pred, y_generated)
 
 
         # Save evaluation metrics to file (optional)
