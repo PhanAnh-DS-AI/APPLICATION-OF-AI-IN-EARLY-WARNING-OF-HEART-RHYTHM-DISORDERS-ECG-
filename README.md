@@ -15,9 +15,8 @@ Two datasets are used for training:
 The model is evaluated on a test set (ECG-102) and an additional record (Record 214) to assess its generalization ability.
 
 ## Model Architecture
-The architecture of the CNN-BiLSTM model is illustrated below:
-
-![Model Architecture](img/architecture.png)
+The architecture of the 1D CNN-BiLSTM model is illustrated below:
+![Model Architecture](notebook_test/img/architecture.png)
 
 - **Input**: Raw ECG signal (1D array).
 - **CNN Blocks**: Residual convolutional layers to extract spatial features.
@@ -48,16 +47,16 @@ The model was trained on both datasets, and the performance was evaluated on a t
 The training process was monitored using TensorBoard, showing the loss, RMSE, and MAE over 50 epochs for both datasets.
 
 #### Loss
-![Loss (Original Dataset)](img/epoch_loss_original.png)
-![Loss (Custom Dataset)](img/epoch_loss_custom.png)
+![Loss (Original Dataset)](notebook_test/img/epoch_loss_original.png)
+![Loss (Custom Dataset)](notebook_test/img/epoch_loss_custom.png)
 
 #### RMSE
-![RMSE (Original Dataset)](img/epoch_rmse_original.png)
-![RMSE (Custom Dataset)](img/epoch_rmse_custom.png)
+![RMSE (Original Dataset)](notebook_test/img/epoch_rmse_original.png)
+![RMSE (Custom Dataset)](notebook_test/img/epoch_rmse_custom.png)
 
 #### MAE
-![MAE (Original Dataset)](img/epoch_mae_original.png)
-![MAE (Custom Dataset)](img/epoch_mae_custom.png)
+![MAE (Original Dataset)](notebook_test/img/epoch_mae_original.png)
+![MAE (Custom Dataset)](notebook_test/img/epoch_mae_custom.png)
 
 ### Key Findings
 - The model trained on the custom dataset outperforms the model trained on the original dataset across all metrics, with lower errors (MSE, MAE, RMSE) and a higher R² score.
