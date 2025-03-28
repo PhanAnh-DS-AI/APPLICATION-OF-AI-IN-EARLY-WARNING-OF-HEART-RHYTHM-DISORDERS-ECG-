@@ -74,7 +74,7 @@ The training process was monitored using TensorBoard, showing the loss, RMSE, an
 
 ## Thesis Document
 This project is part of my undergraduate thesis and scientific research. The full thesis document (in Vietnamese) is available here:  
-[Thesis PDF](docs/thesis.pdf)
+[Thesis PDF](doc/thesis.pdf)
 
 ## How to Run
 ### Prerequisites
