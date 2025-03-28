@@ -48,15 +48,24 @@ The training process was monitored using TensorBoard, showing the loss, RMSE, an
 
 #### Loss
 ![Loss (Original Dataset)](notebook_test/img/epoch_loss_original.png)
+*Hàm mất mát qua các epoch trên tập dữ liệu gốc*
+
 ![Loss (Custom Dataset)](notebook_test/img/epoch_loss_custom.png)
+*Hàm mất mát qua các epoch trên tập dữ liệu tùy chỉnh*
 
 #### RMSE
 ![RMSE (Original Dataset)](notebook_test/img/epoch_rmse_original.png)
+*RMSE qua các epoch trên tập dữ liệu gốc*
+
 ![RMSE (Custom Dataset)](notebook_test/img/epoch_rmse_custom.png)
+*RMSE qua các epoch trên tập dữ liệu tùy chỉnh*
 
 #### MAE
 ![MAE (Original Dataset)](notebook_test/img/epoch_mae_original.png)
+*MAE qua các epoch trên tập dữ liệu gốc*
+
 ![MAE (Custom Dataset)](notebook_test/img/epoch_mae_custom.png)
+*MAE qua các epoch trên tập dữ liệu tùy chỉnh*
 
 ### Key Findings
 - The model trained on the custom dataset outperforms the model trained on the original dataset across all metrics, with lower errors (MSE, MAE, RMSE) and a higher R² score.
