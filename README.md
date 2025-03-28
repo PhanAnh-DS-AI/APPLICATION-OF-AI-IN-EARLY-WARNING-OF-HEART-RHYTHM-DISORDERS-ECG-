@@ -1,6 +1,6 @@
-# ECG Signal Reconstruction with CNN-BiLSTM
+# ECG Signal Reconstruction with 1D CNN-BiLSTM
 
-This project implements a CNN-BiLSTM model for reconstructing ECG signals, focusing on improving signal reconstruction accuracy by leveraging a custom dataset with augmented abnormal samples. The model is trained on two datasets: the original MIT-BIH Arrhythmia dataset and a custom dataset with enhanced abnormal signals. The performance is evaluated using metrics such as MSE, MAE, RMSE, and R², and the training process is visualized using TensorBoard.
+This project implements a 1D CNN-BiLSTM model for reconstructing ECG signals, focusing on improving signal reconstruction accuracy by leveraging a custom dataset with augmented abnormal samples. The model is trained on two datasets: the original MIT-BIH Arrhythmia dataset and a custom dataset with enhanced abnormal signals. The performance is evaluated using metrics such as MSE, MAE, RMSE, and R², and the training process is visualized using TensorBoard.
 
 ## Project Overview
 The goal of this project is to reconstruct ECG signals using a hybrid CNN-BiLSTM model. The model consists of:
@@ -15,9 +15,8 @@ Two datasets are used for training:
 The model is evaluated on a test set (ECG-102) and an additional record (Record 214) to assess its generalization ability.
 
 ## Model Architecture
-The architecture of the CNN-BiLSTM model is illustrated below:
-
-![Model Architecture](img/architecture.png)
+The architecture of the 1D CNN-BiLSTM model is illustrated below:
+![Model Architecture](notebook_test/img/model_architecture.png)
 
 - **Input**: Raw ECG signal (1D array).
 - **CNN Blocks**: Residual convolutional layers to extract spatial features.
@@ -48,16 +47,25 @@ The model was trained on both datasets, and the performance was evaluated on a t
 The training process was monitored using TensorBoard, showing the loss, RMSE, and MAE over 50 epochs for both datasets.
 
 #### Loss
-![Loss (Original Dataset)](img/epoch_loss_original.png)
-![Loss (Custom Dataset)](img/epoch_loss_custom.png)
+![Loss (Original Dataset)](notebook_test/img/epoch_loss_original.png)
+*Loss of Epochs on Original Dataset*
+
+![Loss (Custom Dataset)](notebook_test/img/epoch_loss_custom.png)
+*Loss of Epochs on Custom Dataset*
 
 #### RMSE
-![RMSE (Original Dataset)](img/epoch_rmse_original.png)
-![RMSE (Custom Dataset)](img/epoch_rmse_custom.png)
+![RMSE (Original Dataset)](notebook_test/img/epoch_rmse_original.png)
+*RMSE over Epochs on Original Dataset*
+
+![RMSE (Custom Dataset)](notebook_test/img/epoch_rmse_custom.png)
+*RMSE over Epochs on Custom Dataset*
 
 #### MAE
-![MAE (Original Dataset)](img/epoch_mae_original.png)
-![MAE (Custom Dataset)](img/epoch_mae_custom.png)
+![MAE (Original Dataset) data)](notebook_test/img/epoch_mae_original.png)
+*MAE over epochs on data origin*
+
+![MAE (Custom Dataset)](notebook_test/img/epoch_mae_custom.png)
+*MAE over epochs on data custom*
 
 ### Key Findings
 - The model trained on the custom dataset outperforms the model trained on the original dataset across all metrics, with lower errors (MSE, MAE, RMSE) and a higher R² score.
@@ -74,27 +82,28 @@ The training process was monitored using TensorBoard, showing the loss, RMSE, an
   ```
 
 ### Dataset
-- Place the original and custom ECG datasets in the `data/` directory:
-  - `data/original_ecg.csv`: Original MIT-BIH Arrhythmia dataset.
-  - `data/custom_ecg.csv`: Custom dataset with augmented abnormal samples.
+- Place the original and custom ECG datasets in the `data/processed` directory:
+  - `data/processed/data_102_filtered_100k.csv`: Original MIT-BIH Arrhythmia dataset.
+  - `data/processed/custom_training_dataset.csv`: Custom dataset with augmented abnormal samples.
 
 ### Training
 1. Train the model on both datasets:
    ```bash
-   python train_model.py --dataset original
-   python train_model.py --dataset custom
+   python train_model.py --data_102_filtered_100k.csv
+   python train_model.py --custom_training_dataset.csv
    ```
 2. Monitor the training process using TensorBoard:
    ```bash
-   tensorboard --logdir logs/
+   for original data: tensorboard --logdir logs/tensonboard_logs/
+   for custom data: tensorboard --logdir logs_customdata/tensonboard_logs/
    ```
 
 ### Evaluation
-- The trained models will be saved in the `models/` directory.
+- The trained models will be saved in the `logs/ECG_best_weight` directory.
 - Evaluate the models on the test set and Record 214:
   ```bash
-  python evaluate_model.py --model models/original_model.h5 --test_data data/test_ecg.csv
-  python evaluate_model.py --model models/custom_model.h5 --test_data data/record_214.csv
+  Model train origin data: python evaluate_model.py --model logs/ECG_best_weight/weights-best-epoch-40.weights.h5 --test_dataa data/processed/data_214_30k_filtered.csv.csv
+  Model train custom data: python evaluate_model.py --model logs_customdata/ECG_best_weight/weights-best-epoch-50.weights.h5 --test_dataa data/processed/data_214_30k_filtered.csv.csv
   ```
 
 ## Contact
