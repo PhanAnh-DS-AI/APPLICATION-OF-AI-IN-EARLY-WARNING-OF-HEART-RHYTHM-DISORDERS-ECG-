@@ -1,6 +1,6 @@
-# ECG Signal Reconstruction with CNN-BiLSTM
+# ECG Signal Reconstruction with 1D CNN-BiLSTM
 
-This project implements a CNN-BiLSTM model for reconstructing ECG signals, focusing on improving signal reconstruction accuracy by leveraging a custom dataset with augmented abnormal samples. The model is trained on two datasets: the original MIT-BIH Arrhythmia dataset and a custom dataset with enhanced abnormal signals. The performance is evaluated using metrics such as MSE, MAE, RMSE, and R², and the training process is visualized using TensorBoard.
+This project implements a 1D CNN-BiLSTM model for reconstructing ECG signals, focusing on improving signal reconstruction accuracy by leveraging a custom dataset with augmented abnormal samples. The model is trained on two datasets: the original MIT-BIH Arrhythmia dataset and a custom dataset with enhanced abnormal signals. The performance is evaluated using metrics such as MSE, MAE, RMSE, and R², and the training process is visualized using TensorBoard.
 
 ## Project Overview
 The goal of this project is to reconstruct ECG signals using a hybrid CNN-BiLSTM model. The model consists of:
@@ -73,27 +73,28 @@ The training process was monitored using TensorBoard, showing the loss, RMSE, an
   ```
 
 ### Dataset
-- Place the original and custom ECG datasets in the `data/` directory:
-  - `data/original_ecg.csv`: Original MIT-BIH Arrhythmia dataset.
-  - `data/custom_ecg.csv`: Custom dataset with augmented abnormal samples.
+- Place the original and custom ECG datasets in the `data/processed` directory:
+  - `data/processed/data_102_filtered_100k.csv`: Original MIT-BIH Arrhythmia dataset.
+  - `data/processed/custom_training_dataset.csv`: Custom dataset with augmented abnormal samples.
 
 ### Training
 1. Train the model on both datasets:
    ```bash
-   python train_model.py --dataset original
-   python train_model.py --dataset custom
+   python train_model.py --data_102_filtered_100k.csv
+   python train_model.py --custom_training_dataset.csv
    ```
 2. Monitor the training process using TensorBoard:
    ```bash
-   tensorboard --logdir logs/
+   for original data: tensorboard --logdir logs/tensonboard_logs/
+   for custom data: tensorboard --logdir logs_customdata/tensonboard_logs/
    ```
 
 ### Evaluation
-- The trained models will be saved in the `models/` directory.
+- The trained models will be saved in the `logs/ECG_best_weight` directory.
 - Evaluate the models on the test set and Record 214:
   ```bash
-  python evaluate_model.py --model models/original_model.h5 --test_data data/test_ecg.csv
-  python evaluate_model.py --model models/custom_model.h5 --test_data data/record_214.csv
+  Model train origin data: python evaluate_model.py --model logs/ECG_best_weight/weights-best-epoch-40.weights.h5 --test_dataa data/processed/data_214_30k_filtered.csv.csv
+  Model train custom data: python evaluate_model.py --model logs_customdata/ECG_best_weight/weights-best-epoch-50.weights.h5 --test_dataa data/processed/data_214_30k_filtered.csv.csv
   ```
 
 ## Contact
