@@ -82,6 +82,7 @@ The training process was monitored using TensorBoard, showing the loss, RMSE, an
 - The custom dataset, with augmented abnormal samples, enables the model to learn more diverse and complex features, leading to better generalization (as seen in Record 214).
 - TensorBoard visualizations show faster convergence and better stability on the custom dataset, especially on the validation set.
 - The reconstructed signals on Record 214 demonstrate that the model trained on the custom dataset better captures complex patterns, especially in abnormal segments, compared to the model trained on the original dataset.
+- TensorBoard visualizations show faster convergence and better stability on the custom dataset, especially on the validation set
 
 ## Thesis Document
 This project is part of my undergraduate thesis and scientific research. The full thesis document (in Vietnamese) is available here:  
