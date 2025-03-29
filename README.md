@@ -3,7 +3,7 @@
 This project implements a 1D CNN-BiLSTM model for reconstructing ECG signals, focusing on improving signal reconstruction accuracy by leveraging a custom dataset with augmented abnormal samples. The model is trained on two datasets: the original MIT-BIH Arrhythmia dataset and a custom dataset with enhanced abnormal signals. The performance is evaluated using metrics such as MSE, MAE, RMSE, and R², and the training process is visualized using TensorBoard.
 
 ## Project Overview
-The goal of this project is to reconstruct ECG signals using a hybrid CNN-BiLSTM model. The model consists of:
+The goal of this project is to reconstruct ECG signals using a hybrid 1D CNN-BiLSTM model. The model consists of:
 - **Residual CNN blocks**: Extract spatial features from raw ECG signals.
 - **Bi-LSTM layers**: Capture temporal dependencies in the signal.
 - **Dense layer**: Reconstruct the final ECG signal.
@@ -16,6 +16,7 @@ The model is evaluated on a test set (ECG-102) and an additional record (Record 
 
 ## Model Architecture
 The architecture of the 1D CNN-BiLSTM model is illustrated below:
+
 ![Model Architecture](notebook_test/img/model_architecture.png)
 
 - **Input**: Raw ECG signal (1D array).
@@ -25,7 +26,7 @@ The architecture of the 1D CNN-BiLSTM model is illustrated below:
 
 ## Results
 ### Performance Metrics
-The model was trained on both datasets, and the performance was evaluated on a test set. The results are summarized below:
+The model was trained on both datasets, and the performance was evaluated on a test set (ECG-102). The results are summarized below:
 
 | Metric | Original Dataset | Custom Dataset |
 |--------|------------------|----------------|
@@ -43,38 +44,50 @@ The model was trained on both datasets, and the performance was evaluated on a t
 | RMSE   | 0.0220           | 0.0146         |
 | R²     | 0.9568           | 0.9810         |
 
+### Reconstructed Signals on Record 214
+The reconstructed ECG signals on Record 214 are visualized below, comparing the actual signal with the reconstructed signal from both models.
+
+![Reconstructed Signal (Original Dataset)](img_dataprocess/reconstructed_214_original.png)  
+*Reconstructed ECG signal on Record 214 by the model trained on the original dataset*
+
+![Reconstructed Signal (Custom Dataset)](img_dataprocess/reconstructed_214_custom.png)  
+*Reconstructed ECG signal on Record 214 by the model trained on the custom dataset*
+
 ### Training Process (TensorBoard Visualizations)
 The training process was monitored using TensorBoard, showing the loss, RMSE, and MAE over 50 epochs for both datasets.
 
 #### Loss
-![Loss (Original Dataset)](notebook_test/img/epoch_loss_original.png)
+![Loss (Original Dataset)](notebook_test/img/epoch_loss_original.png)  
 *Loss of Epochs on Original Dataset*
 
-![Loss (Custom Dataset)](notebook_test/img/epoch_loss_custom.png)
+![Loss (Custom Dataset)](notebook_test/img/epoch_loss_custom.png)  
 *Loss of Epochs on Custom Dataset*
 
 #### RMSE
-![RMSE (Original Dataset)](notebook_test/img/epoch_rmse_original.png)
+![RMSE (Original Dataset)](notebook_test/img/epoch_rmse_original.png)  
 *RMSE over Epochs on Original Dataset*
 
-![RMSE (Custom Dataset)](notebook_test/img/epoch_rmse_custom.png)
+![RMSE (Custom Dataset)](notebook_test/img/epoch_rmse_custom.png)  
 *RMSE over Epochs on Custom Dataset*
 
 #### MAE
-![MAE (Original Dataset) data)](notebook_test/img/epoch_mae_original.png)
+![MAE (Original Dataset)](notebook_test/img/epoch_mae_original.png)  
 *MAE over epochs on data origin*
 
-![MAE (Custom Dataset)](notebook_test/img/epoch_mae_custom.png)
+![MAE (Custom Dataset)](notebook_test/img/epoch_mae_custom.png)  
 *MAE over epochs on data custom*
 
 ### Key Findings
 - The model trained on the custom dataset outperforms the model trained on the original dataset across all metrics, with lower errors (MSE, MAE, RMSE) and a higher R² score.
 - The custom dataset, with augmented abnormal samples, enables the model to learn more diverse and complex features, leading to better generalization (as seen in Record 214).
 - TensorBoard visualizations show faster convergence and better stability on the custom dataset, especially on the validation set.
+- The reconstructed signals on Record 214 demonstrate that the model trained on the custom dataset better captures complex patterns, especially in abnormal segments, compared to the model trained on the original dataset.
 
 ## Thesis Document
 This project is part of my undergraduate thesis and scientific research. The full thesis document (in Vietnamese) is available here:  
 [Thesis PDF](doc/thesis.pdf)
+
+"Please cite this thesis if you use it in your work: Phan Anh, 'ECG Signal Reconstruction with CNN-BiLSTM', Van Lang University, 2025."
 
 ## How to Run
 ### Prerequisites
@@ -89,6 +102,7 @@ This project is part of my undergraduate thesis and scientific research. The ful
 - Place the original and custom ECG datasets in the `data/processed` directory:
   - `data/processed/data_102_filtered_100k.csv`: Original MIT-BIH Arrhythmia dataset.
   - `data/processed/custom_training_dataset.csv`: Custom dataset with augmented abnormal samples.
+  - `data/processed/data_214_30k_filtered.csv`: Record 214 for evaluation.
 
 ### Training
 1. Train the model on both datasets:
@@ -98,16 +112,16 @@ This project is part of my undergraduate thesis and scientific research. The ful
    ```
 2. Monitor the training process using TensorBoard:
    ```bash
-   for original data: tensorboard --logdir logs/tensonboard_logs/
-   for custom data: tensorboard --logdir logs_customdata/tensonboard_logs/
+   tensorboard --logdir logs/tensonboard_logs/  # For original data
+   tensorboard --logdir logs_customdata/tensonboard_logs/  # For custom data
    ```
 
 ### Evaluation
 - The trained models will be saved in the `logs/ECG_best_weight` directory.
 - Evaluate the models on the test set and Record 214:
   ```bash
-  Model train origin data: python evaluate_model.py --model logs/ECG_best_weight/weights-best-epoch-40.weights.h5 --test_dataa data/processed/data_214_30k_filtered.csv.csv
-  Model train custom data: python evaluate_model.py --model logs_customdata/ECG_best_weight/weights-best-epoch-50.weights.h5 --test_dataa data/processed/data_214_30k_filtered.csv.csv
+  python evaluate_model.py --model logs/ECG_best_weight/weights-best-epoch-40.weights.h5 --test_data data/processed/data_214_30k_filtered.csv  # Model trained on original data
+  python evaluate_model.py --model logs_customdata/ECG_best_weight/weights-best-epoch-50.weights.h5 --test_data data/processed/data_214_30k_filtered.csv  # Model trained on custom data
   ```
 
 ## Contact
