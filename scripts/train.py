@@ -48,7 +48,7 @@ def train_model():
 
     # Create model
     logger.info("Creating model...")
-    model = create_optimized_model(input_shape=(look_back, 1))
+    model = create_model(input_shape=(look_back, 1))
 
     # Đảm bảo thư mục logs và weights tồn tại
     output_dir = "./logs/ECG_best_weight"

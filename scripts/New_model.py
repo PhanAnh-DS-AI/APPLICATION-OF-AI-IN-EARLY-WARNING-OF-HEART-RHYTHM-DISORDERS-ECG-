@@ -32,13 +32,12 @@ def create_optimized_model(input_shape=(300, 1)):
     block_input = x  # shape: (75, 32)
     y = Conv1D(32, kernel_size=10, activation='relu', padding='same')(block_input)
     y = Conv1D(32, kernel_size=10, activation='relu', padding='same')(y)
-    y = MaxPooling1D(pool_size=2)(y)   # shape: (37, 32) nếu pool_size=2 (lưu ý: 75//2 = 37)
+    y = MaxPooling1D(pool_size=2)(y)   # shape: (37, 32)
     y = Dropout(0.2)(y)
     y = BatchNormalization()(y)
     
-    # Projection cho block_input của 
+    # Projection cho block_input của block 
     residual = MaxPooling1D(pool_size=2)(block_input)  # shape: (37, 32)
-    # Ở đây số kênh đã bằng nhau nên không cần dùng Conv1D (hoặc có thể dùng nếu muốn)
     x = Add()([y, residual])  # kết quả shape: (37, 32)
     
     # Lớp Bi-LSTM với recurrent dropout
@@ -46,10 +45,10 @@ def create_optimized_model(input_shape=(300, 1)):
                                     kernel_regularizer=regularizers.l2(0.001),
                                     recurrent_dropout=0.2))(x)
     
-    # Thêm Attention: sử dụng GlobalAveragePooling1D làm cách đơn giản để tổng hợp
+    # Attention: GlobalAveragePooling1D
     attn_out = GlobalAveragePooling1D()(lstm_out)
     
-    # Lớp fully connected
+    # fully connected
     fc = Dense(100, activation='relu', kernel_regularizer=regularizers.l2(0.001))(attn_out)
     fc = Dropout(0.3)(fc)
     outputs = Dense(1, activation='linear', kernel_regularizer=regularizers.l2(0.001))(fc)
@@ -63,5 +62,4 @@ def create_optimized_model(input_shape=(300, 1)):
     model.summary()
     return model
 
-# Ví dụ chạy mô hình:
-model = create_optimized_model()
+# model = create_optimized_model()

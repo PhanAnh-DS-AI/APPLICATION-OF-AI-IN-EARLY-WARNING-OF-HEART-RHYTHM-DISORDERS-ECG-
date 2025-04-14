@@ -1,6 +1,6 @@
 # model.py
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv1D, LSTM, Dropout, Dense, Bidirectional, BatchNormalization, MaxPooling1D
+from tensorflow.keras.layers import Conv1D, LSTM, Dropout, Dense, Bidirectional, BatchNormalization,GlobalAveragePooling1D ,MaxPooling1D
 from tensorflow.keras import regularizers
 from tensorflow.keras.optimizers import Adam
 import tensorflow as tf
@@ -24,32 +24,19 @@ def create_model(input_shape=(300, 1)):
         model.add(BatchNormalization())
 
     # Lớp Bi-LSTM
-    model.add(Bidirectional(LSTM(50, return_sequences=False, kernel_regularizer=regularizers.l2(0.001))))
-    model.add(BatchNormalization())
-    model.add(Dropout(0.2))
+    model.add(Bidirectional(LSTM(64, return_sequences=True, kernel_regularizer=regularizers.l2(0.001), recurrent_dropout=0.2)))
 
+    model.add(GlobalAveragePooling1D())  # Thay thế cho Attention
     # Lớp đầu ra
+    model.add(Dense(100, activation='relu', kernel_regularizer=regularizers.l2(0.001)))
+    model.add(Dropout(0.3))
     model.add(Dense(1, activation="linear", kernel_regularizer=regularizers.l2(0.001)))
 
     # Compile model
-    model.compile(
-        loss='mean_squared_error',  # RMSE
-        optimizer=Adam(learning_rate=0.0001),
-        metrics=['accuracy', tf.keras.metrics.AUC(name='auc')]
-    )
+    model.compile(loss='mean_squared_error', optimizer=Adam(learning_rate=0.0001),
+                metrics=[tf.keras.metrics.MeanAbsoluteError(name='mae'),
+                        tf.keras.metrics.RootMeanSquaredError(name='rmse'),
+                        tf.keras.metrics.AUC(name='auc')])
 
     model.summary()
     return model
-
-# import pydot
-# import graphviz
-
-# print("pydot version:", pydot.__version__)
-# print("graphviz version:", graphviz.__version__)
-# from tensorflow.keras.utils import plot_model
-
-# # Khởi tạo mô hình
-# model = create_model()
-
-# # Xuất sơ đồ mô hình
-# plot_model(model, to_file="model_architecture.png", show_shapes=True, show_layer_names=True)
