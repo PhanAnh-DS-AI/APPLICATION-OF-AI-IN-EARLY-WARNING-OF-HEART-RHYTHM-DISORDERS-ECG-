@@ -34,12 +34,12 @@ class TimeHistory(tf.keras.callbacks.Callback):
 
 def train_model():
     # Parameters 
-    data_path = "./data/processed/data_102_filtered_100k.csv"
+    data_path = "./data/processed/custom_training_dataset.csv"  # data\processed\csvcustom_training_dataset.csv
     look_back = 300
     train_split = 0.7
     val_split = 0.15
-    batch_size = 64
-    epochs = 50
+    batch_size = 32
+    epochs = 70
 
     # Initialize data processor
     processor = ECGDataProcessor(data_path, look_back, train_split, val_split)
@@ -48,7 +48,7 @@ def train_model():
 
     # Create model
     logger.info("Creating model...")
-    model = create_model(input_shape=(look_back, 1))
+    model = create_optimized_model(input_shape=(look_back, 1))
 
     # Đảm bảo thư mục logs và weights tồn tại
     output_dir = "./logs/ECG_best_weight"

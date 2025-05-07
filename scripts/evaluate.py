@@ -79,8 +79,8 @@ def visualize_predictions(y_true, y_pred):
         plt.figure(figsize=(12, 6))  # Chỉnh kích thước hình
         
         # Lấy 300 điểm đầu tiên của tập dữ liệu để vẽ
-        plt.plot(y_true[1800:], label='Tín hiệu thực tế', color='blue')
-        plt.plot(y_pred[1800:], label='Tín hiệu dự đoán', color='red', linestyle='--')
+        plt.plot(y_true[12500:], label='Tín hiệu thực tế', color='blue')
+        plt.plot(y_pred[12500:], label='Tín hiệu dự đoán', color='red', linestyle='--')
 
         # Định dạng biểu đồ
         plt.title('Tín hiệu ECG thực tế và dư đoán (Model Original Data)')
@@ -114,11 +114,11 @@ def visualize_predictions_generated(y_true, y_pred, y_generated):
 
 def main():
     # Parameters data/processed/data_102_filtered_100k.csv | data\processed\data_214_30k_filtered.csv | \custom_training_dataset.csv
-    data_path = "./data/processed/data_214_30k_filtered.csv"
+    data_path = "data/processed/data_102_filtered_100k.csv"
     look_back = 300
     train_split = 0.7
     val_split = 0.15
-    weights_path = "./logs_customdata/ECG_best_weight/weights-best-epoch-50.weights.h5"  # Đường dẫn đến weights tốt nhất | Weights customdata: ./logs_customdata/ECG_best_weight/weights-best-epoch-50.weights.h5 | "./logs/ECG_best_weight/weights-best-epoch-40.weights.h5"
+    weights_path = "./tensorboard_new_model_expv3/logs_orginaldata/ECG_best_weight/weights-best-epoch-60.weights.h5"  # Đường dẫn đến weights tốt nhất | Weights customdata: ./logs_customdata/ECG_best_weight/weights-best-epoch-50.weights.h5 | "./logs/ECG_best_weight/weights-best-epoch-40.weights.h5"
 
     try:
         # Initialize data processor
