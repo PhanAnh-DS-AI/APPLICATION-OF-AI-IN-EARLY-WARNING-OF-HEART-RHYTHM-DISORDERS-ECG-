@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from preprocess_data import ECGDataProcessor
-from model import create_model
+from scripts.model_grid_search import create_model
 from New_model import create_optimized_model
 import tensorflow as tf
 import logging

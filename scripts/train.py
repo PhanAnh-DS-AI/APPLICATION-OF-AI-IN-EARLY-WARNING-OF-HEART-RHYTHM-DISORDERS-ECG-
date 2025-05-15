@@ -2,7 +2,7 @@
 import os
 import time
 from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
-from model import create_model
+from model_grid_search import create_model
 from New_model import create_optimized_model
 from preprocess_data import ECGDataProcessor  # Sửa tên file từ preprocess.py thành preprocess_data.py
 import tensorflow as tf
